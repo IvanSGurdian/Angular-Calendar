@@ -1,0 +1,151 @@
+:host {
+  --grey-100: #e4e9f0;
+  --grey-200: #cfd7e3;
+  --grey-300: #b5c0cd;
+  --grey-800: #3e4e63;
+  --grid-gap: 1px;
+  --day-label-size: 20px;
+}
+
+ol, ul,
+li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.calendar-container {
+  margin: 25px;
+  position: relative;
+  border: 1px solid #cfd7e3;
+  
+  background-color: var(--grey-200);
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px;
+
+    background-color: #fff;
+
+    .calendar-current-month {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .calendar-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px
+    }
+  }
+
+  .days-of-week,
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    
+  }
+
+  .days-of-week > li {
+    text-align: center;
+    background-color: #fff;
+    font-weight: 600;
+  }
+
+  .calendar-grid {
+    height: 100%;
+    position: relative;
+    gap: var(--grid-gap);
+    border-top: solid 1px var(--grey-200);
+    grid-auto-rows: minmax(100px, auto);
+
+    .calendar-day {
+      position: relative;
+      color: var(--grey-800);
+      background-color: #fff;
+      padding: 20px 5px 5px 5px;
+      overflow-x: hidden;
+
+      > span {
+        display: flex;
+        place-content: center;
+        place-items: center;
+
+        position: absolute;
+        right: 2px;
+        top: 2px;
+
+        width: 20px;
+        height: 20px;
+
+        font-size: 0.8rem;
+      }
+
+      .reminder-list li {
+
+        display: flex;
+        align-items: center;
+
+        &.list-row {
+          display: inline-flex;
+        }
+
+        .reminder-badge {
+          display: inline-block;
+          flex-shrink: 0;
+
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+
+          padding: 0;
+          margin-bottom: 0;
+          margin-right: 3px;
+        }
+
+        .reminder-detail {
+          color: var(--grey-800);
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow-x: hidden;
+          display: inline-block;
+          cursor: pointer;
+          font-weight: normal;
+
+          &:hover {
+            color: #3c7dd3;
+          }
+        }
+      }
+
+      &:hover {
+        background-color: rgba(184, 220, 255, 0.57);
+      }
+
+      &.not-current {
+        background-color: var(--grey-100);
+        color: var(--grey-300);
+      }
+
+      &.is-today span:not(.reminder-badge){
+        border-radius: 50%;
+        color: #fff;
+        background-color: var(--grey-800);
+      }
+
+      &:nth-child(7n+1),
+      &:nth-child(7n) {
+        color: rgba(34, 99, 240, 0.734);
+        font-weight: 600;
+      }
+    }
+  }
+}

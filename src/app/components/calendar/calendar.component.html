@@ -1,0 +1,50 @@
+<mat-toolbar>
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Jobsity challenge</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="openReminderForm()">
+   <mat-icon>add</mat-icon> New reminder
+ </button>
+</mat-toolbar>
+
+<!-- Create the calendar here -->
+
+<div class="calendar-container">
+  <section class="calendar-header">
+    <span class="calendar-current-month">{{ selectedMonth }}</span>
+    <div class="calendar-pagination">
+      <button  mat-icon-button id="previous-month" (click)="navigateToPreviousMonth()"><mat-icon>navigate_before</mat-icon></button>
+      <button  mat-button id="current-month" (click)="navigateToToday()">Today</button>
+      <button  mat-icon-button id="next-month" (click)="navigateToNextMonth()"><mat-icon>navigate_next</mat-icon></button>
+    </div>
+  </section>
+
+  <ol class="days-of-week">
+    <li *ngFor="let weekday of weekdays">{{ weekday }}</li>
+  </ol>
+
+  <ol class="calendar-grid">
+    <li class="calendar-day" *ngFor="let day of days" [ngClass]="{'not-current': !day.isCurrentMonth, 'is-today': day.date === today}">
+      <span>{{ day.date | date:'d' }}</span>
+
+      <ul class="reminder-list">
+        <ng-container *ngIf="day.reminders?.length <= 4; else compactView">
+          <li (click)="openReminderForm(reminder)" *ngFor="let reminder of day.reminders">
+            <span [style.background-color]="reminder.color" class="reminder-badge"></span>
+            <small class="reminder-detail">{{ reminder.dateTime | date:'hh:mma' }} - {{ reminder.text }}</small>
+          </li>
+        </ng-container>
+
+        <ng-template #compactView>
+          <li class="list-row" (click)="openReminderForm(reminder)" *ngFor="let reminder of day.reminders" matTooltip="{{reminder.dateTime | date:'hh:mma'}} - {{reminder.text}}">
+            <span [style.background-color]="reminder.color" class="reminder-badge"></span>
+          </li>
+        </ng-template>
+      </ul>
+    </li>
+  </ol>
+</div>
+
+<!-- ======================== -->

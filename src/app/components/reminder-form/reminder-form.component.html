@@ -1,0 +1,67 @@
+<h2 matDialogTitle>{{ isEditing ? 'Edit' : 'New' }} Reminder</h2>
+
+<mat-dialog-content>
+    <form id="reminder-form" class="reminder-form" [formGroup]="reminderForm" (ngSubmit)="submitForm()">
+        <mat-form-field appearance="standard" class="form-field">
+            <mat-label>City</mat-label>
+            <input autocomplete="off" formControlName="city" matInput type="text">
+            <div *ngIf="isLoading" matSuffix id="loading"></div>
+            <mat-hint align="start">Search for a city to get a 5-day weather forecast</mat-hint>
+        </mat-form-field>
+        <span>{{errorMessage}}</span>
+
+        <ng-container *ngIf="weatherInfo">
+            <div class="weather-grid">
+                <div class="weather-details" *ngFor="let weather of weatherInfo">
+                    <span class="weather-date">{{ weather.date | date:'MMM dd' }}</span>
+                    <div *ngFor="let w of weather.weather">
+                        <div class="d-flex align-items-center">
+                            <span>{{ w.time }}</span>
+                            <img width="30" [src]="'http://openweathermap.org/img/wn/' + w.details.icon + '@2x.png'" [alt]="w.details.description" [matTooltip]="w.details.main + ' - ' + w.details.description | titlecase" matTooltipPosition="right">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="form-row">
+            <mat-form-field>
+                <input autocomplete="off" matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" formControlName="dateTime">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <ngx-mat-datetime-picker #picker [enableMeridian]="true" [showSeconds]="false">
+                    <!-- Custom icon or text of Apply icon -->
+                    <ng-template>
+                    <!-- <mat-icon>star</mat-icon> -->
+                    <span>OK</span>
+                    </ng-template>
+                </ngx-mat-datetime-picker>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+                <mat-label>Color</mat-label>
+                <mat-select class="color-picker-select" formControlName="color">
+                    <mat-select-trigger>
+                        <div class="color-item" [style.background-color]="reminderForm.get('color').value"></div>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let color of colorOptions" [value]="color">
+                        <div class="color-item" [style.background-color]="color"></div>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="standard">
+            <mat-label>Description</mat-label>
+            <textarea formControlName="text" matInput placeholder="Write your reminder here"></textarea>
+            <mat-error *ngIf="reminderForm.get('text').hasError('maxlength')">
+                Reminders must be <strong>less than 30</strong> characters.
+            </mat-error>
+            <mat-error *ngIf="reminderForm.get('text').hasError('required')">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button form="reminder-form" [disabled]="!reminderForm.valid">{{ isEditing ? 'Update' : 'Add' }} reminder</button>
+</mat-dialog-actions>
